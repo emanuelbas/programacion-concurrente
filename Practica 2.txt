@@ -73,3 +73,93 @@ Process maestra{
 		resultados[tareaActual.alumno] = true
 	}
 }
+
+5.
+//Primero los 50 elijen la tarea, luego comienzan
+sem mutex_contar = 1 
+int cont = 0
+sem comenzar = 0
+sem esperar_elecciones = 0
+
+//Se activa cuando todos los alumnos 
+//terminen la tarea
+bool finTarea[1:10] = ([10],false) 
+
+//Semaforo que lleva la cantidad de 
+//alumnos que desean entregar
+sem hay_alumno_entregando = 0
+
+//La maestra recibe la entrega
+sem entregar = 0 
+
+//El alumno avisa que los datos fueron enviados
+int id_alumno
+int id_tarea
+sem entregados= 0 
+
+//De cada alumno se guarda el orden en que 
+//resolvio su tarea
+int orden[1:50]
+
+//Un semaforo permitira pasa cuando los 5 
+//alumnos terminen su tarea
+int retirarse[1:10] = ([10] 0)
+
+Process alumno[i:1..50]{
+	
+	int t= elegir()
+	P(mutex_contar)
+	cont++
+	if (cont == 50) {
+		V(esperar_elecciones)
+	}
+	else {
+		V(mutex_contar)
+	}
+	P(comenzar)
+	string tarea = resolverTarea()
+	V(hay_alumno_entregando)
+	P(entregar)
+	id_alumno = i
+	id_tarea = t
+	V(entreagados)
+	P(retirarse[t])
+	
+
+}
+
+Process maestra{
+//La maestra llevara la cuenta de cuantos 
+//alumnos van entregando cada tipo de tarea
+int contTarea[1:10] = ([10],0) 
+
+//Espera que los alumnos elijan
+//El ultimo avisara
+P(esperar_elecciones)
+
+//Permite comenzar
+for i=1,i<50,i++ 
+	V(comenzar)
+
+
+For i=1,i<50,i++ {
+	P(hay_alumno_entregando)
+	V(entregar)
+	P(entregados)
+	contTarea[id_tarea]++
+	orden[id_alumno] = contTarea[id_tarea]
+	if contTarea[id_tarea] == 5 {
+		for i=1,i<5,i++ {
+			P(retirarse[id_tarea]
+		}
+	}
+	
+	
+}
+
+}
+
+
+
+
+
