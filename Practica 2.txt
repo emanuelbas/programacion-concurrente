@@ -211,7 +211,50 @@ while (tareas_terminadas < 10)
 			V(barrera_posicion[a])
 			
 
+5. Un tercer intento, quinto en realidad
 
+int global_cont = 0
+int global_a, global_t
+int[1:50] pos
+
+sem mutex_elegir = 1
+sem barrera_elegir = 0
+sem avisar = 0
+sem[1:10] barrera_resultado = ([10]0)
+
+Process alumno[a:1..50]
+	int t = elegir()
+	P(mutex_elegir)
+	global_cont++
+	if (global_cont == 50)
+		for (i=0,i<50,i++)
+			V(barrera_elegir)
+	else
+		V(mutex_elegir)
+	fi
+	P(mutex_avisar)
+	//Alumno haciendo tarea
+	P(mutex_avisar)
+	global_a = a
+	global_t = t
+	V(avisar)
+	P(barrera_resultado[t])
+	write('Resultado recibido: ',pos[a])
+
+Process maestra
+	int[1:10] cont = ([10]0)
+	int terminadas = 0
+
+	while (terminadas < 10) do
+		P(avisar)
+		cont[global_t]++
+		pos[global_a]=cont[global_t]
+		if (cont[global_t] == 5)
+			for (i=0,i<5,i++)
+				V(barrera_resultado[global_t])
+			terminados++
+		V (mutex_avisar)
+	od
 
 6.
 
