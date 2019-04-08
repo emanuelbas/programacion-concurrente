@@ -155,6 +155,64 @@ For i=1,i<50,i++ {
 }
 
 
+5. (Un segundo intento)
+
+sem mutex_eleccion = 1
+sem barrera_eleccion = 0
+int cont_eleccion = 0
+
+sem mutex_avisar = 1
+int global_alumno, global_tarea, global_posicion
+sem avisar = 0
+
+sem[1:50] barrera_posicion = ([1:50]0)
+
+
+Process alumno[a:1..50]
+
+int tarea = elegir(a)
+P(mutex_eleccion)
+cont_eleccion++
+if (cont_eleccion == 50)
+	for (i=1,i<50,i++)
+		V(barrera_eleccion)
+else 
+	V(mutex_eleccion)
+P(barrera_eleccion)
+hacer_tarea()
+P(mutex_avisar)
+global_alumno = a
+global_tarea = tarea
+V(avisar)
+P(barrera_posicion[a])
+write('mi posicion es ',global_posicion)
+
+
+
+Process maestra
+
+int tareas_terminadas = 0
+int[1:50] posiciones
+int[1:10] cont_tareas = ([1:10]0)
+
+//Almacena los alumnos que pertenecen a cada tarea
+queue of int[1:10] alumnos_de_tarea 
+
+while (tareas_terminadas < 10)
+	P(avisar)
+	cont_tareas[global_tarea]++
+	posiciones[global_alumno] = cont_tareas[global_tarea]
+	alumnos_de_tarea.push(global_alumno)
+	if (cont_tareas[global_tarea] == 5)
+		tareas_terminadas++
+		for i=0,i<5,i++
+			a = alumnos_de_tarea[global_tarea].pop()
+			global_posicion = posiciones[a]
+			V(barrera_posicion[a])
+			
+
+
+
 6.
 
 sem llegada = 0
@@ -193,3 +251,5 @@ Process Jefe{
 	calcularMax(cont)
 	
 }
+
+7.
