@@ -1,0 +1,41 @@
+7. Existe una casa de comida rápida que es atendida por 1 empleado. Cuando una persona llega se pone en la cola y espera a lo sumo 10 minutos a que el empleado lo atienda. Pasado ese tiempo se retira sin realizar la compra
+
+Process persona[p:1..N]
+
+P(mutex_cola)
+cola.push(p)
+V(mutex_cola)
+estado[p] = 'waiting'
+V(barrera_cola)
+V(barrera_iniciar_espera[p])
+P(barrera_evento[p])
+P(mutex_estado[p])
+if (estado[p] == 'attended')
+	//La persona se retira con su compra
+else
+	//La persona se retira sin realizar la compra
+V(mutex_estado[p]
+
+Process esperar[p:1..N]
+
+P(mutex_iniciar_espera[p])
+DELAY(10 minutos)
+P(mutex_estado[p])
+if (estado[p] == 'waiting')
+	estado[p] = 'gone'
+	V(barrera_evento[p])
+V(mutex_estado[p])
+
+Process empleado
+int p
+while true
+	P(barrera_cola)
+	P(mutex_cola)
+	cola.pop(p)
+	V(mutex_cola)
+	P(mutex_estado[p])
+	if (estado[p] == 'waiting')
+		//Se atiende a la persona
+		estado[p] = 'attended'
+	V(mutex_estado[p])
+	V(barrera_evento[p])

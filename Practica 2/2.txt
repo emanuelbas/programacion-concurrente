@@ -1,0 +1,15 @@
+2.
+cola Q[N]
+sem recurso = 5; Q_mutex = 1
+Process proceso[i:1..N]{
+	P(recurso)
+	P(Q_mutex)
+	RecursoLocal = Q.POP()
+	V(Q_mutex)
+	//SC donde se utiliza el recurso
+	//Devuelvo el recurso a la pila
+	P(Q_mutex)
+	Q.PUSH(RecursoLocal)
+	V(Q_mutex)
+	V(recurso)	
+}

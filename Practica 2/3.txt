@@ -1,0 +1,3 @@
+3. Si se pasa el semaforo general antes que el especifico del tipo de proceso, en un caso extremo podria darse que aun el tipo de proceso no pueda pasar, mientras que el otro si deberia pero quedo trabado porque el tipo que no puede pasar consumio el semaforo general.
+Entonces la solucion seria invertir el orden de los semaforos para que primero se haga check sobre el tipo de proceso y luego espere un lugar
+Sobre liberar el recurso se recomienda liberarlos en el mismo orden en que fueron tomados pero para este caso no afecta ya que son consecutivos

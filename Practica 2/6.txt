@@ -1,0 +1,38 @@
+6.
+
+sem llegada = 0
+sem comenzar = 0
+sem mutex_tareas = 1
+queue of Tarea tareas
+int cont[1:E] = ([1:E] 0)
+sem listo = 0
+
+Process empleado[i:1..E]{
+
+V(llegada)
+P(comenzar)
+
+P(mutex_tareas)
+while not tareas.isEmpty(){
+	Tarea tareaActual = tareas.pop()
+	V(mutex_tareas)
+	tareaActual.realizar()
+	cont[i]++
+	P(mutex_tareas)
+}
+V(listo)
+}
+
+Process Jefe{
+	for (i=1,i<E,i++){
+		P(llegada)
+	}
+	for (i=1,i<E,i++){
+		V(comenzar)
+	}
+	for (i=1,i<E,i++){
+		P(listo)
+	}
+	calcularMax(cont)
+	
+}

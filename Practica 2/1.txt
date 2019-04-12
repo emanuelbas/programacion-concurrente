@@ -1,0 +1,9 @@
+1.
+sem detector:= 1
+Process persona [i:1..N]{
+P(detector)
+//SC
+V(detector)
+}
+
+Para que pasen mas personas por detector en simultaneo aumento el numero del semaforo.
