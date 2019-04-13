@@ -1,0 +1,55 @@
+10.Resolver el funcionamiento en una empresa de genética. Hay N clientes que
+ sucesivamente envían secuencias de ADN a la empresa para que sean analizadas y
+ esperan los resultados para poder envían otra secuencia a analizar. Para 
+resolver estos análisis la empresa cuenta con 2 servidores que van alternando 
+su uso para no exigirlos de más (en todo momento uno está trabajando y los 
+otros dos descansando); cada 8 horas cambia en servidor con el que se trabaja. 
+El servidor que está trabajando, toma un pedido (de a uno de acuerdo al orden 
+de llegada de los mismos), lo resuelve y devuelve el resultado al cliente 
+correspondiente; si al terminar ya han pasado las 8 horas despierta al próximo 
+servidor y él descansa, sino continúa con el siguiente pedido.  
+
+sem mutex_servidor_trabajando = 1
+int servidor_trabajando = 0
+sem despertar_servidor[0:2] = ([0]1) 
+sem despertar_servidor = ([1:2]0)
+queue cola
+sem avisar_hay_adn
+sem avisar_resultado[c]
+resultado[1:N] resultados
+
+Process cliente[c:1..N]
+adn adn
+while true
+	adn = tomarADN(c)
+	P(mutex_cola)
+	cola.push(c,adn)
+	V(mutex_cola)
+	V(avisar_hay_adn)
+	P(avisar_resultado[c])
+	verResultado(resultados[c])
+
+Process servidor[s:0..2]
+adn adn
+int c
+while true
+	P(despertar_servidor[s])
+	P(mutex_servidor_trabajando)
+	while (servidor_trabajando == s)
+		V(mutex_servidor_trabajando)
+		P(avisar_hay_adn)
+		P(mutex_cola)
+		cola.pop(c,adn)
+		V(mutex_cola)
+		resultado[c] = analizar(adn)
+		V(avisar_resultado[c])
+		P(mutex_servidor_trabajando)
+
+Process despertador
+while true
+	delay(8 horas)
+	P(mutex_servidor_trabajando)
+	servidor_trabajando = (servidor_trabajando +1)mod 3
+	V(mutex_servidor_trabajando)
+	V(despertar_servidor[servidor_trabajando])
+	
