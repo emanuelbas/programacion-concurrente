@@ -1,5 +1,14 @@
 7. Existe una casa de comida rápida que es atendida por 1 empleado. Cuando una persona llega se pone en la cola y espera a lo sumo 10 minutos a que el empleado lo atienda. Pasado ese tiempo se retira sin realizar la compra
 
+
+sem mutex_cola = 1
+queue cola
+string[1:N] estado
+sem barrera_cola = 0
+sem[1:N] barrera_iniciar_espera = ([N]0)
+sem[1:N] barrera_evento = ([N]0)
+sem[1:N] mutex_estado = ([N]1)
+
 Process persona[p:1..N]
 
 P(mutex_cola)
