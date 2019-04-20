@@ -1,4 +1,8 @@
-5.
+5. Dejo algunas soluciones que fui haciendo a medida que aprendia, pero lo mejor es ir directo a la de mas abajo donde ya tenia mas experiencia
+
+
+
+
 //Primero los 50 elijen la tarea, luego comienzan
 sem mutex_contar = 1 
 int cont = 0
@@ -179,3 +183,45 @@ Process maestra
 			terminados++
 		V (mutex_avisar)
 	od
+
+//Vamos una vuelta mas! esta vez la maestra se encargara de indicar cuando pueden empezar
+
+5.
+
+sem eleccion = 0
+sem aviso_cola = 0
+sem [1:10] resultado_listo = ([10]0)
+int [1:10] orden
+
+Process alumno[a:1..50]
+int idtarea = elegir()
+V(eleccion)
+P(comenzar)
+realizarTarea()
+P(mutex_cola)
+cola.push(idtarea)
+V(mutex_cola)
+V(aviso_cola)
+P(resultado_listo[idtarea])
+recibirResultado(orden[idtarea])
+
+Process profesor
+
+int[1:10] contTareas = ([10]0)
+int terminados = 0
+int idtarea
+for (i=0,i<50,i++)
+	P(eleccion)
+for (i=0,i<50,i++)
+	V(comenzar)
+for (i=0,i<50,i++)
+	P(aviso_cola)
+	P(mutex_cola)
+	idtarea = cola.pop()
+	V(mutex_cola)
+	contTareas[idtarea]++
+	if (contTareas[idtarea] == 5)
+		terminados++
+		orden[idtarea] = terminados
+		for (j=0,j<5,j++)
+			V(resultado_listo[idtarea])
