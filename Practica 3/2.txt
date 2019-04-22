@@ -1,0 +1,24 @@
+Implementar el acceso a una base de datos de solo lectura que puede atender a lo sumo 5 consultas simultáneas.
+
+2.
+
+Monitor database
+cond cola
+cantOcupando=0
+cantCola=0
+
+procedure entrar
+
+if (cantOcupando>=5)
+	cantCola++
+	wait(cola)
+else
+	cantOcupando++
+
+
+procedure salir
+if (cantCola > 0)
+	cantOcupando--
+else
+	cantCola--
+	signal(cola)

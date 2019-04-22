@@ -1,0 +1,38 @@
+El codigo presentado es
+
+Monitor puente
+cond cola
+int cant = 0
+
+Procedure entrarPuente(int au)
+	while (cant > 0) wait (cola)
+	cant = cant++
+
+Procedure salirPuente(int au)
+	cant--
+	signal(cola)
+
+Procedure auto[a:1..N]
+	punte.entrarPuente(a)
+	"el auto cruza el puente"
+	puente.salirPuente(a)
+
+
+a. El codigo funciona correctamente?
+
+El problema en este codigo es que tras despertar a un proceso de la cola, no se garantiza que este tome el procesador inmediatamente, dado que un nuevo proceso que aun no fue encolado puede ganarle el lugar, estaran compitiendo por obtener el monitor cuando en la vida real deberia pasar el auto que este primero en la cola
+Ignorando lo anterior el codigo funciona, dado que el while permite volver a evaluar si el puente fue ocupado por otro auto
+
+b. Puede simplificarse el programa?
+
+Dado que solo un auto debe pasar por el puente podria simplemente hacer que el monitor sea el puente en si y cuando termine de cruzarse otro proceso auto pueda usarlo
+
+Monitor puente
+
+cond cola
+int cant = 0
+
+procedure cruzar
+
+if (cant > 0) wait(cola)
+cola++
