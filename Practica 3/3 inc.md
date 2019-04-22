@@ -1,4 +1,5 @@
 3.  Resolver el problema de P productores y C consumidores con un buffer de tamaño N. 
+
 ´´´java
 procedure productor[p:1..P]
 generarProducto(producto)
@@ -50,5 +51,4 @@ if (productoresEnCola>0)
 	signal(productores)
 else
 	cantidadEnBuffer--
-
 ´´´
