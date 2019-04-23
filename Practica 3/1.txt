@@ -25,14 +25,14 @@ Ignorando lo anterior el codigo funciona, dado que el while permite volver a eva
 
 b. Puede simplificarse el programa?
 
-Dado que solo un auto debe pasar por el puente podria simplemente hacer que el monitor sea el puente en si y cuando termine de cruzarse otro proceso auto pueda usarlo
+Dado que solo un auto debe pasar por el puente podria simplemente hacer que el monitor sea el puente en si y cuando termine de cruzarse otro proceso auto pueda usarlo, esto se debe a que ningun proceso puede hacer nada mas mientras espera que el puente se libere asique se secuencializa, ademas estoy conciderando que la solucion no contempla que auto llego primero
 
 Monitor puente
 
-cond cola
-int cant = 0
-
 procedure cruzar
+"el auto cruza el puente"
 
-if (cant > 0) wait(cola)
-cola++
+c. ¿La solución original respeta el orden de llegada de los vehículos? Si rescribió el código en el punto b), ¿esa solución respeta el orden de llegada?
+
+No, para una solucion que contemple el orden de llegada se necesita un codigo un poco mas complejo, que incluya un contador de autos en cola y al momento de salir garantize que el monitor sea tomado por el proceso encolado.
+En los siguientes ejercicios se ven este tipo de codigos
