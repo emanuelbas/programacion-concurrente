@@ -12,7 +12,10 @@ procedure atender(int cliente)
 
 procedure encolar(int cliente)
 begin
-	cola.push(cliente)
+	cola.push(cliente);
+	if (empleados_dormidos > 0) then 
+		empleados_dormidos--;
+		signal(empleados);
 	//El cliente sera responsable de iniciar su timer
 	//Ademas se dormira en su propio monitor
 end;
@@ -21,7 +24,9 @@ procedure atender(int cliente)
 begin
 	exito = 0;
 	while (exito <> 1)
-		while (cola.isEmpty()) then wait(empleados)
+		while (cola.isEmpty()) then 
+			wait(empleados);
+			empleados_dormidos++;
 		cola.pop(cliente);
 		estado[cliente].atender(exito);
 end;
