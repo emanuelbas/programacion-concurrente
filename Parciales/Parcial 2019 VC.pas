@@ -128,11 +128,10 @@ begin
 	process sincronizar_salida()
 	begin
 		cont++
-		if (cont < 11) then
+		if (cont < 4) then
 			wait(cv)
 		else
 			signalall(cv);
-		syn.sincronizar_salida();
 	end;
 end;
 
