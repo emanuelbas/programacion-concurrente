@@ -106,8 +106,9 @@ begin
 		if (syn1 < 11) then
 			wait(cv)
 		else
+			syn.sincronizar_salida();
 			signalall(cv);
-		syn.sincronizar_salida();
+		
 	end;
 	
 	process llegamos()
