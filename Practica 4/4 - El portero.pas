@@ -53,3 +53,33 @@ begin
 				send esperando_puerta[i]();
 		end;
 end;
+
+
+{ Otra alternativa
+process corredor(c:1 .. C) // C-1?
+{
+	if p == 1
+		For i=1 to N-1
+			Receive llegue();
+	
+		send c_avisarPorteroLargar
+		receive seguir()
+	else
+		send llegue();
+		receive seguir();
+	}
+
+
+{
+process portero ()
+{
+	receive c_avisarPorteroLargar()
+
+	For i=1 to N
+		send seguir();
+	
+
+	for (int i = 0 ; i < C ; i++)
+	{
+		send c_largarCarrera[]
+	}	
