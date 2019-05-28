@@ -1,21 +1,15 @@
--- Esto es un comentario!
------ ada no tiene bloques de comentarios -_- ----
 
---PesoPuente = 5
---Autos = 1
---Camioneta = 2
---Camion = 3
---Hay A,B,C autos, camionetas y camiones
-
---a) Todos los vehiculos tienen la misma prioridad
 --b) Modificar para que los camiones tengan mayor prioridad
 
+-- Se agrega a los when una condicion extra, esto se explica en el enunciado:
+-- Dentro de la condición booleana de una alternativa (en el WHEN) se puede 
+-- preguntar por la cantidad de entry call pendientes de cualquier entry de la tarea. 
+-- Entonces voy a checkear que no hayan calls de camiones con (CamionIn’count = 0)
 
 
 TASK TYPE Auto;
 TASK TYPE Camioneta;
 Task Type Camiones;
---Es  case-insensitive
 
 Task Puente IS
 	entry AutoIn();
@@ -48,16 +42,14 @@ Task body Puente IS
 	peso : Integer;
 begin
 	peso:=0;
-	--Si no hay condicion puedo tirar un loop asi nomas.
 	loop 
-		--El select es no deterministico explicado en el punto 5
 		select
-			when ( peso <= 4 ) => accept AutoIn() IS
+			when ((CamionIn’count = 0)AND( peso <= 4 )) => accept AutoIn() IS
 				peso := peso +1;
 			end AutoIn;
 			
 			OR
-			when ( peso <= 3 ) => accept CamionetaIn() IS
+			when ((CamionIn’count = 0)AND( peso <= 3 )) => accept CamionetaIn() IS
 				peso := peso +2; 
 			end CamionetaIn;
 			
