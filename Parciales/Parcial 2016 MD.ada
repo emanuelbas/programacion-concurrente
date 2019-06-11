@@ -141,11 +141,17 @@ task body cliente is
 end cliente;
 
 task body sala is
+	libre := false;
 	loop
 		select
+		when (libre)
 			accept pasar_prioridad();
-		or when (cola_prioridad'count = 0)
+			libre := false;
+		or when (libre and cola_prioridad'count = 0)
 			accept pasar_normal();
+			libre := false;
+		or accept salir();
+			libre := true;
 		end select;
 	end loop;
 end sala;
