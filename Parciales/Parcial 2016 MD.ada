@@ -49,6 +49,7 @@ end;
 
 ----------------------
 -- Solucion con ADA --
+--  Usando un buffer -
 ----------------------
 
 task type cliente;
@@ -112,3 +113,40 @@ begin
 		cliente(i).identificar(i);
 	end loop;
 end;
+
+
+
+---------------------------------
+--Parece una mejor solucion------
+--Solucion sin el buffer---------
+---------------------------------
+
+task type cliente;
+task sala;
+
+task sala is
+	entry pasar_normal();
+	entry pasar_prioridad();
+	entry salir();
+end sala;
+
+cliente : array(N) of cliente;
+
+task body cliente is
+	t:= tipo();
+	if t = 'normal' then sala.pasar_normal();
+	else sala.pasar_prioridad();
+	usar();
+	sala.salir();
+end cliente;
+
+task body sala is
+	loop
+		select
+			accept pasar_prioridad();
+		or when (cola_prioridad'count = 0)
+			accept pasar_normal();
+		end select;
+	end loop;
+end sala;
+
