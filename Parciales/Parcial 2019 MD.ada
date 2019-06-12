@@ -40,7 +40,41 @@ end;
 
 -- Resolver con PMS
 -- En una exposición de aeronautica N personas quieren usar un simulador, solo pueden acceder de a uno
--- Hay un unico empleado. 
+-- Hay un unico empleado. Las personas lo usan un rato y luego se retiran
+
+procedure persona(p:1..N)
+begin
+	cola!encolar(p);
+	empleado?permitir();
+	usar();
+	empleado!fin();
+end;
+
+procedure cola
+	cola:queue of int;
+begin
+	while (true) do
+	begin
+		if !(empty(cola));empleado?estoy_libre()=>
+			cola.pop(p);
+			empleado!dar_turno(p);
+		[]();persona[*]?encolar(p)=>
+			cola.push(p);
+		end;
+	end;
+end;
+
+procedure empleado
+begin
+	while (true) do
+	begin
+		cola!estoy_libre();
+		cola?dar_turno(p);
+		persona[p]!permitir();
+		persona[p]?fin();
+	end;
+end;
+
 
 -- Resolver con ADA
 -- N usuarios y M directores quieren usar una impresora de uno a la vez, deben pasar en orden
