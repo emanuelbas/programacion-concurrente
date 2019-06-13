@@ -80,3 +80,48 @@ end;
 -- N usuarios y M directores quieren usar una impresora de uno a la vez, deben pasar en orden
 -- dando prioridad siempre a los directores. Los usuarios esperan hasta imprimir luego se retiran.
 -- Los directores esperan hasta 5' si no lo logran se retiran sin imprimir.
+
+task type usuario;
+task type director;
+task impresora;
+
+task impresora is
+	entry usuario_imprime(IN trabajo:string);
+	entry director_imprime(IN trabajo:string);
+end impresora;
+
+usuario : array(N) of usuario;
+director : array(M) of director;
+
+task body usuario is
+	trabajo:string;
+begin
+	impresora.usuario_imprime(trabajo);
+end usuario;
+
+task body director is
+	trabajo : string;
+begin
+	select
+		impresora.director_imprime(trabajo);
+	or delay(5')
+		null
+	end select;
+end director;
+
+task body impresora is
+
+begin
+	loop
+		select
+			accept director_imprime(IN trabajo:string) do imprimir(trabajo); end;
+		or
+			when ((director_imprime'count=0))=> 
+				accept usuario_imprime(IN trabajo:string) do imprimir(trabajo); end;
+		end select;
+	end loop;
+end impresora;
+
+begin
+	null;
+end.
