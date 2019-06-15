@@ -1,0 +1,29 @@
+Nota que el await solo permitira que el filosofo coma cuando se
+ cumpla que sus 2 tenedores estan libres, ademas de forma 
+atomica se deshabilitaran ambos tenedores para que otros
+ filosofos no puedan usarlo, las boquitas indican que lo que va
+ adentro se ejecutara de forma atomica, es decir todo junto sin
+ permitir que se colen otros procesos
+Se evita el deadlock dado que se garantiza que una vez dentro
+ del sector critico eventualmente se va a salir liberando los
+ tenedores, seria un problema si no incluiria ambos tenedores 
+en la atomicidad porque entonces si podria pasar que varios 
+filosofos retengan uno de los tenedores pero no puedan empezar 
+porque otro filosofo tenga el que requieren
+La espera innecesaria se produciría si liberaria ambos 
+tenedores de forma atómica, ya que puedo liberarlos por 
+separado para que otro filósfo vaya usando el primero en
+ liberarse, sin tener que esperar a que el otro (que no lo 
+necesita) también se libere
+
+t = Array of boolean [1..5] //hay 5 cuchillos para 6 filosofos, si estan en true estan libres
+//Inicializar todos los tenedores en true
+Process filosofo [i:1..6]
+int posI = i //Posicion del tenedor izquierdo para este filosofo
+int posD = i mod 6 + 1 //En caso de ser 6 su pos derecha dara 1
+while true
+	<wait ((t[posI] == true) AND (t[posD] == true)); t[posI] = false; t[posD] = false>
+	//Filosofo comiendo, a esto se le llama sector critico
+	//Para salir del sector critico debo librerar los tenedores
+	t[posD] = false; t[postI] = false
+

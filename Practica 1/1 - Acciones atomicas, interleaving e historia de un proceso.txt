@@ -1,0 +1,53 @@
+Para los primeros ejercicios hay que tener en cuenta que las 
+instrucciones no son atómicas, por ejemplo
+x:= (x*3)+(x*2)+1 involucra diferentes acciones separadas, x*3,
+x*2, +1, x:=.. 
+El hecho de que el programa sea concurrente involucra que un 
+proceso puede intervenir entre las instrucciones de otro y 
+ocacionar que tenga un resultado diferente según el orden en 
+que se mezclan, es decir su historial
+
+a) Verdadero
+Si se ejecutan en orden priero P1, p2, P3, X da 56
+
+b) Verdadero
+P3: (x*3) = 0; 
+P1: (x = 0) = true;
+P1: y:= 4*2;
+P1: x:= 8 + 2;
+P1: fin.
+P2: (x > 0) = true;
+P3: (x * 2) = 20;
+P2: x := x +1; (21)
+P2: fin. 
+P3: x:= x + 1; (22)
+P3: fin.
+-> x = 22
+
+c) Verdadero
+P3: (x*3) = 0; 
+P1: (x = 0) = true;
+P1: y:= 4*2;
+P1: x:= 8 + 2;
+P1: fin.
+P2: (x > 0) = true;
+P2: x := x +1;
+P2: fin. 
+P3: (11 * 2) = 22;
+P3: x:= 22 + 1;
+P3: fin.
+-> x = 23
+
+d) Verdadero
+Un valor incorrecto se da cuando se asume que una variable tiene un valor
+pero luego de pasar un control otro proceso la modifico
+
+En este caso podria darse que 
+P1: If (x=0); true;
+P3: x*3 = 0;
+P3: x*2 = 0;
+P3: x := 1;
+P1: then x := x + 1;
+
+En el P1 no deberia poder pasar que luego del If x tenga el
+ un valor diferente de 0
