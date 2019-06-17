@@ -1,0 +1,34 @@
+4.
+
+Problema de la seccion critica usando unicamente variables compartidas
+Cada proceso avisa al coordinador cuando quiere usarla, espera el permiso, la usa y luego avisa cuando termino.
+
+Program SC
+var
+	libre : boolen := true;
+	esperando : queue of int;
+	dar_permiso : array(n) of boolean := ([N],false)
+
+process SC[i:1..N]
+begin
+	esperando.push(i);
+	while (!dar_permiso[i]) do noop; //Espero el permiso
+	usar_seccion_critica();
+	libre := true;
+end SC;
+
+process Coordinador
+	while (true) do
+	begin
+		//Espero que se encole algun proceso
+		while (empty(esperando)) do noop end;
+
+		esperando.pop(id);
+		libre:=false;
+		dar_permiso[id]:=true;
+		
+		//Espero que el proceso libere la seccion
+		while (!libre) do noop end;
+	end while;
+end coordinador;
+	
