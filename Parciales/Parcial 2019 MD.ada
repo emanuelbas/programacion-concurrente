@@ -17,13 +17,16 @@ procedure cola
 
 begin
 	while (true) do
-		if ((empty(promocion)) and !(empty(normal))); receive profesor_libre(p) =>
-			receive normal(a,examen);
-			send corregir[p](a,examen);
-		[] !(empty(promocion)); receive profesor_libre(p); =>
-			receive promocion(a,examen);
-			send corregir[p](a,examen);
-		end if;
+		receive profesor_libre(p);
+		while (true) do
+			if ((empty(promocion)) and !(empty(normal))); receive normal(a,examen)=>				
+				send corregir[p](a,examen);
+				break;
+			[] !(empty(promocion));receive promocion(a,examen) =>
+				send corregir[p](a,examen);
+				break;
+			end if;
+		end while;
 	end while;			
 end;
 
